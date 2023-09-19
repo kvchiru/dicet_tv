@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+    stages {
+        stage ('SCM') {
+            steps {
+                git branch: 'master', url:'https://github.com/kvchiru/dicet_tv.git'
+            }
+        }
+        stage ('Bulid') {
+            steps {
+             sh 'mvn clean package'   
+            }
+        }
+        stage ('Deploy') {
+            steps { 
+                deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://13.235.51.37:8080/')], contextPath: 'hema test', war: '**/*.war'
+            }    
+        }
+    }
+}
